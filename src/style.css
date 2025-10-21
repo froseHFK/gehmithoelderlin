@@ -1,6 +1,6 @@
-/* NEU: Wir definieren eine globale CSS-Variable für die Hintergrundfarbe */
 :root {
-  --nav-bg-rgb: 61, 44, 63; /* Standardwert: Winterfarbe (als R,G,B) */
+  --muted: #aaaaaa;
+  --accent: #c71818;
 }
 
 body {
@@ -13,66 +13,79 @@ body {
 }
 
 canvas {
-  position: fixed; top: 0; left: 0; outline: none; z-index: -1;
-}
-
-/* --- Burger Menü --- */
-.burger-menu {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 30px;
-  height: 24px;
-  cursor: pointer;
-  z-index: 20;
-}
-.burger-menu span {
-  display: block; width: 100%; height: 2px; background-color: #f0e8f2; margin-bottom: 6px; transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.nav-active .burger-menu span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.nav-active .burger-menu span:nth-child(2) { opacity: 0; }
-.nav-active .burger-menu span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-/* --- Navigation --- */
-.poem-nav {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  padding-top: 6rem;
-  padding-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  z-index: 15;
-  
-  /* HIER WIRD DIE VARIABLE VERWENDET */
-  background: rgba(var(--nav-bg-rgb), 0.8);
-  
-  backdrop-filter: blur(10px);
-  transform: translateY(-100%);
-  transition: transform 0.5s ease, background-color 1s ease; /* Füge background-color zur Transition hinzu */
-}
-.nav-active .poem-nav {
-  transform: translateY(0);
-}
-.poem-nav button {
-  font-family: inherit; font-size: 1.2rem; background: transparent; border: none; padding: 0; color: #c9b8cd; cursor: pointer; transition: color 0.3s ease;
-}
-.poem-nav button:hover {
-  color: #fff;
-}
-.poem-nav button.active {
-  color: #fff;
-  font-weight: bold;
+  outline: none;
+  z-index: -1;
 }
 
-/* Der Rest deines CSS bleibt unverändert */
+/* --- Burger Menü & Navigation --- */
+.burger-menu { position: fixed; top: 1.5rem; right: 1.5rem; width: 30px; height: 24px; cursor: pointer; z-index: 20; }
+.burger-menu span { display: block; width: 100%; height: 2px; background-color: #f0e8f2; margin-bottom: 6px; transition: transform 0.3s ease, opacity 0.3s ease; }
+.nav-active .burger-menu span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-active .burger-menu span:nth-child(2) { opacity: 0; }
+.nav-active .burger-menu span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+.poem-nav { position: fixed; top: 0; left: 0; width: 100%; padding-top: 6rem; padding-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; z-index: 15; background: rgba(var(--nav-bg-rgb, 61, 44, 63), 0.8); backdrop-filter: blur(10px); transform: translateY(-100%); transition: transform 0.5s ease, background-color 1s ease; }
+.nav-active .poem-nav { transform: translateY(0); }
+.poem-nav button { font-family: inherit; font-size: 1.2rem; background: transparent; border: none; padding: 0; color: #c9b8cd; cursor: pointer; transition: color 0.3s ease; }
+.poem-nav button:hover { color: #fff; }
+.poem-nav button.active { color: #fff; font-weight: bold; }
+
+/* --- Haupt-Layout --- */
 .content-area { position: absolute; left: 0; top: 0; width: 50%; height: 100vh; display: grid; place-items: center; z-index: 5; }
-.scene { position: absolute; width: 80%; opacity: 1; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateX(0); }
-.scene.hidden { opacity: 0; pointer-events: none; transform: translateX(-30px); }
+#center-stage { position: absolute; left: 0; top: 0; width: 100%; height: 100vh; display: grid; place-items: center; z-index: 6; }
+.scene { position: absolute; width: 80%; max-width: 500px; opacity: 1; transition: opacity 0.8s ease, transform 0.8s ease; transform: scale(1); }
+.scene.hidden { opacity: 0; pointer-events: none; transform: scale(0.95); }
+.content-area .scene { width: 90%; max-width: none; transform: translateX(0); }
+.content-area .scene.hidden { transform: translateX(-30px); }
 .poem-box { padding: 2rem; background: rgba(25, 15, 30, 0.2); backdrop-filter: blur(5px); border-radius: 15px; text-align: left; }
 .poem-box h2 { margin-top: 0; padding-bottom: 1rem; }
 .final-title { width: 100%; text-align: center; }
 .final-title h1 { font-size: 4rem; color: #fff; }
+
+/* --- Stile von deinem Kollegen --- */
+.frame-wrap { position: relative; width: 100%; max-width: 500px; margin: 24px auto; perspective: 800px; cursor: pointer; }
+.frame { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); transform-style: preserve-3d; transition: transform 300ms ease; }
+.layer { position: absolute; inset: 0; will-change: transform, opacity; }
+.layer img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.layer.bust { animation: breathe 7s ease-in-out infinite; filter: contrast(1.07) saturate(1.02); }
+@keyframes breathe { 0%, 100% { transform: translateZ(20px) scale(1.000); } 50% { transform: translateZ(20px) scale(0.988); } }
+.layer.gloss { mix-blend-mode: screen; background: radial-gradient(200px 140px at 65% 25%, rgba(255,255,255,0.18), transparent 60%), radial-gradient(140px 100px at 30% 70%, rgba(255,255,255,0.09), transparent 70%); opacity: 0.35; animation: drift 16s ease-in-out infinite; }
+@keyframes drift { 0%, 100% { transform: translateX(0) translateY(0); } 50% { transform: translateX(-6px) translateY(4px); } }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 14px auto 8px; }
+.controls button, .controls .ghost { appearance: none; border: 1px solid rgba(255,255,255,0.14); background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); color: #f0e8f2; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 200ms ease; font-weight: 600; letter-spacing: 0.01em; font-family: system-ui, sans-serif; text-decoration: none; }
+.controls button:hover, .controls .ghost:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.readout, .output { text-align: center; max-width: 500px; margin: 10px auto 0; font-family: system-ui, sans-serif; }
+.readout { color: var(--muted); min-height: 1.6em; }
+.output { line-height: 1.55; min-height: 88px; white-space: pre-wrap; }
+
+/* --- KORRIGIERTES Styling für den Haupttitel auf der Startseite --- */
+.name {
+  position: relative; /* ÄNDERUNG: Immer relativ zum Fenster positionieren */
+  top: 0; /* ÄNDERUNG: 15% von der oberen Bildschirmkante */
+  left: 50%;
+  transform: translateX(-50%); /* Zentriert den Titel exakt horizontal */
+  text-align: center;
+  z-index: 10; /* Stellt sicher, dass der Titel über dem Rahmen liegt */
+  pointer-events: none; /* Lässt Mausklicks zum Rahmen "durchfallen" */
+  font-family: "Notable", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.name h1 {
+  font-size: 4rem;
+  margin: 0;
+  font-weight: normal;
+  color: #f0e8f2;
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.name h2 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: normal;
+  color: #c9b8cd;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
