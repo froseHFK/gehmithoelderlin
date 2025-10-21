@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mit Hölderlin gehen — Web-MVP</title>
+<meta name="description" content="Ein lebendiger Rahmen: Sprich mit Friedrich und er antwortet poetisch.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preload" as="image" href="assets/frame_full.webp">
+<link rel="preload" as="image" href="assets/bust_crop.webp">
+<style>
+
+:root {
+  --bg: #0c0c0f;
+  --fg: #eeeeee;
+  --muted: #aaaaaa;
+  --accent: #c71818;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(1200px 800px at 60% 10%, #16161b 0%, #0c0c0f 60%, #070709 100%);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  overflow-x: hidden;
+}
+
+main {
+  max-width: 960px;
+  margin: 32px auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  opacity: 0.92;
+}
+
+.badge {
+  width: 14px; height: 14px; border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(199,24,24,0.6);
+}
+
+h1 {
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.frame-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 24px auto;
+  perspective: 800px;
+}
+
+.frame {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  transform-style: preserve-3d;
+  transition: transform 300ms ease;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+.layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.layer.bust { 
+  animation: breathe 7s ease-in-out infinite;
+  filter: contrast(1.07) saturate(1.02);
+}
+
+@keyframes breathe {
+  0% { transform: translateZ(20px) scale(1.000); }
+  50% { transform: translateZ(20px) scale(0.988); }
+  100% { transform: translateZ(20px) scale(1.000); }
+}
+
+.layer.gloss {
+  mix-blend-mode: screen;
+  background: radial-gradient(200px 140px at 65% 25%, rgba(255,255,255,0.18), transparent 60%),
+              radial-gradient(140px 100px at 30% 70%, rgba(255,255,255,0.09), transparent 70%);
+  opacity: 0.35;
+  animation: drift 16s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-6px) translateY(4px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 14px auto 8px;
+}
+
+button, .ghost {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  color: var(--fg);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 200ms ease;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+button:hover {
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.ghost {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.readout {
+  margin: 10px auto 0;
+  max-width: 700px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  min-height: 1.6em;
+  text-align: center;
+}
+
+.output {
+  margin: 22px auto 0;
+  max-width: 700px;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.09);
+  padding: 14px 16px;
+  border-radius: 12px;
+  min-height: 88px;
+  white-space: pre-wrap;
+}
+
+.footer {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin-top: 24px;
+}
+
+</style>
+</head>
+<body>
+<main>
+  <div class="header">
+    <div class="badge"></div>
+    <h1>Mit Hölderlin gehen — Web‑MVP</h1>
+  </div>
+
+  <div class="frame-wrap">
+    <div class="frame" id="frame">
+      <div class="layer base"><img src="assets/frame_full.webp" alt="Gerahmtes Porträt"></div>
+      <div class="layer bust" style="transform: translateZ(20px)"><img src="assets/bust_crop.webp" alt="Hölderlin"></div>
+      <div class="layer gloss"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="micBtn">🎤 Diktieren</button>
+    <button id="poemBtn">📝 Gedicht erzeugen</button>
+    <a class="ghost" href="#" onclick="speak(randomItem(versesPool));return false;">✨ Vers sagen</a>
+  </div>
+
+  <div class="readout">Sag mir, was du siehst…</div>
+  <div class="output"></div>
+
+  <div class="footer">Tipp: Klick auf den Rahmen oder „Diktieren“ starten. Am Ende „Gedicht erzeugen“.</div>
+</main>
+
+<script>
+
+// Tiny "Hölderlin" web MVP
+const versesPool = [
+  "Ich bin nur Bild und atme doch: ein Hauch aus Kreide, Licht und Zeit.",
+  "Sprich mir vom Wind — ich höre Schritte im Gras der Jahre.",
+  "Ein Blatt, das fällt, ist Gottes Silbe auf deinem Weg.",
+  "Der Fluss vergisst nicht; er trägt die Namen heim ins Meer.",
+  "Wohin du zeigst, dort öffnet sich die Welt wie eine Zeile.",
+  "Das Ferne wohnt im Nahen, seit du es ans Licht sprichst."
+];
+
+const transitions = [
+  "Sag mir, was du siehst…",
+  "Was trägt der Himmel heute?",
+  "Ein Geräusch — und was es weckt?",
+  "Noch ein Bild, und ich antworte."
+];
+
+let sessionNotes = [];
+let speaking = false;
+
+function $(sel){ return document.querySelector(sel); }
+
+function speak(text){
+  const out = $(".output");
+  typewriter(out, text);
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(text.replace(/\n/g, " "));
+    u.lang = 'de-DE';
+    u.rate = 0.95;
+    u.pitch = 1.02;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function typewriter(el, text){
+  el.textContent = "";
+  let i = 0;
+  const iv = setInterval(()=>{
+    el.textContent += text[i++] || "";
+    if(i >= text.length){ clearInterval(iv); }
+  }, 14);
+}
+
+function randomItem(a){ return a[Math.floor(Math.random()*a.length)] }
+
+// Parallax
+(function(){
+  const frame = $(".frame");
+  let rect = null;
+  function handle(x,y){
+    if(!rect) rect = frame.getBoundingClientRect();
+    const dx = (x - (rect.left + rect.width/2)) / rect.width;
+    const dy = (y - (rect.top + rect.height/2)) / rect.height;
+    const rotX = dy * -6;
+    const rotY = dx * 6;
+    frame.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+  window.addEventListener('mousemove', e=> handle(e.clientX, e.clientY));
+  window.addEventListener('touchmove', e=> {
+    if(e.touches && e.touches[0]) handle(e.touches[0].clientX, e.touches[0].clientY);
+  }, {passive:true});
+})();
+
+// Click: respond with a short verse
+$(".frame").addEventListener("click", ()=>{
+  const v = randomItem(versesPool);
+  sessionNotes.push(v);
+  speak(v + "\n" + randomItem(transitions));
+});
+
+// Mic input (Web Speech API)
+let recognition;
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'de-DE';
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (e)=>{
+    let finalText = "";
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const frag = e.results[i][0].transcript;
+      if(e.results[i].isFinal) finalText += frag;
+      $(".readout").textContent = frag;
+    }
+    if(finalText){
+      sessionNotes.push(finalText.trim());
+      // micro "style" rule: swap simple nouns to imagery
+      const reply = craftReply(finalText);
+      speak(reply);
+    }
+  };
+  recognition.onend = ()=>{
+    speaking = false;
+    $("#micBtn").textContent = "🎤 Diktieren";
+  }
+}
+
+function craftReply(userText){
+  // Very tiny style shim: add motifs and turn phrases into short reflections
+  const motifs = ["Licht", "Wind", "Fluss", "Weg", "Heimat"];
+  const motif = randomItem(motifs);
+  const cleaned = userText.replace(/[\.\!\?]+$/,"");
+  const line1 = `${cleaned}, sagst du — und ${motif.toLowerCase()} antwortet leise.`;
+  const line2 = randomItem([
+    "Ein kurzer Schritt genügt, und die Welt wird Zeile.",
+    "Ich höre darin den Tag, der sich erinnert.",
+    "So spricht die Nähe, wenn das Ferne lauscht."
+  ]);
+  return line1 + "\n" + line2;
+}
+
+$("#micBtn").addEventListener("click", ()=>{
+  if(!recognition){ alert("Sprachaufnahme wird von deinem Browser nicht unterstützt."); return; }
+  if(!speaking){
+    speaking = true;
+    $(".readout").textContent = "…höre zu";
+    recognition.start();
+    $("#micBtn").textContent = "■ Stop";
+  } else {
+    recognition.stop();
+  }
+});
+
+$("#poemBtn").addEventListener("click", ()=>{
+  const lines = buildPoem(sessionNotes).join("\n");
+  speak(lines);
+  downloadText("hoelderlin_spaziergang.txt", lines);
+});
+
+function buildPoem(notes){
+  // build 8–12 lines poem from notes + motifs
+  const motifs = ["Fluss", "Licht", "Wind", "Weg", "Abend", "Heimat", "Regen", "Blatt", "Stille"];
+  const out = [];
+  const n = Math.min(12, Math.max(8, notes.length + 4));
+  for(let i=0;i<n;i++){
+    const seed = (notes[i%notes.length] || "").split(/\s+/).slice(0,5).join(" ");
+    const m = randomItem(motifs);
+    const variants = [
+      `${seed} — und ${m.toLowerCase()} hält den Atem an.`,
+      `Ich gehe; ${m.toLowerCase()} geht mit, leise und doch nah.`,
+      `Was du gesagt hast, wird Zeile; ${m.toLowerCase()} liest sie vor.`,
+      `Zwischen Schritt und Schritt ein Raum, den ${m.toLowerCase()} füllt.`,
+      `Der Tag verneigt sich; ${m.toLowerCase()} bleibt und hört uns zu.`
+    ];
+    out.push(randomItem(variants));
+  }
+  out.push("— Ende des Spaziergangs —");
+  return out;
+}
+
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:"text/plain"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(a.href);
+  a.remove();
+}
+
+</script>
+</body>
+</html>
