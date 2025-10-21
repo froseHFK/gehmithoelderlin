@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hölderlin Particles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Das Burger-Menü Icon -->
+    <div class="burger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Die Navigation (startet versteckt) -->
+    <nav class="poem-nav">
+      <button data-target="scene-1" class="active">Hälfte des Lebens</button>
+      <button data-target="scene-2">An die Parzen</button>
+      <button data-target="scene-3">Patmos</button>
+      <button data-target="scene-4">Der Archipelagus</button>
+      <button data-target="scene-final">Das Porträt</button>
+    </nav>
+
+    <!-- Der Hauptbereich für den Text auf der linken Seite -->
+    <main class="content-area">
+      <!-- Szene 1: Hälfte des Lebens -->
+      <section id="scene-1" class="scene">
+        <div class="poem-box">
+          <h2>Hälfte des Lebens</h2>
+          <p>Mit gelben Birnen hänget<br />und voll mit wilden Rosen<br />das Land in den See,<br />ihr holden Schwäne,<br />und trunken von Küssen<br />tunkt ihr das Haupt<br />ins heilignüchterne Wasser.</p>
+          <p>Weh mir, wo nehm ich, wenn<br />es Winter ist, die Blumen, und wo<br />den Sonnenschein,<br />und Schatten der Erde?<br />die Mauern stehn<br />sprachlos und kalt, im Winde<br />klirren die Fahnen.</p>
+        </div>
+      </section>
+
+      <!-- Szene 2: An die Parzen -->
+      <section id="scene-2" class="scene hidden">
+        <div class="poem-box">
+          <h2>An die Parzen</h2>
+          <p>Ihr Parzen, ihr webet<br />
+          am Faden des Lebens<br />
+          mit unermüdlicher Hand,<br />
+          ihr webet und windet<br />
+          die zarten Gespinste<br />
+          zu mannigfachen Bahnen.</p>
+          <p>O nehmet den Faden,<br />
+          der mir noch geblieben,<br />
+          in eure unendlichen Werke!<br />
+          Webet ihn weiter<br />
+          zu bunten Gestalten,<br />
+          wie es euch gefällt.</p>
+        </div>
+      </section>
+
+      <!-- Szene 3: Patmos -->
+      <section id="scene-3" class="scene hidden">
+        <div class="poem-box">
+          <h2>Patmos</h2>
+          <p>Ich hab' es mit eigenen Augen gesehen,<br />
+          wie die Sonne dort unten im Meere versinkt,<br />
+          und die Sterne heraufsteigen im blauen Äther,<br />
+          und die Nacht sich ausbreitet über die Welt.</p>
+          <p>O selige Insel, du heilige Stätte,<br />
+          wo der Geist sich erhebt zu den höchsten Höhen,<br />
+          und die Seele sich öffnet für das Göttliche,<br />
+          fern von der Hektik der irdischen Welt.</p>
+        </div>
+      </section>
+
+      <!-- Szene 4: Der Archipelagus -->
+      <section id="scene-4" class="scene hidden">
+        <div class="poem-box">
+          <h2>Der Archipelagus</h2>
+          <p>Inmitten des weiten Meeres<br />
+          liegt ein Archipelagus verborgen,<br />
+          eine Kette von Inseln,<br />
+          die wie Juwelen im Sonnenlicht funkeln.</p>
+          <p>Jede Insel birgt ein Geheimnis,<br />
+          eine Geschichte von Liebe und Leid,<br />
+          von Sehnsucht und Erfüllung,<br />
+          die nur darauf wartet, entdeckt zu werden.</p>
+        </div>
+      </section>
+      
+      <!-- Finale Szene, nur der Titel -->
+      <section id="scene-final" class="scene hidden">
+         <div class="final-title">
+            <h1>Friedrich Hölderlin</h1>
+         </div>
+      </section>
+    </main>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

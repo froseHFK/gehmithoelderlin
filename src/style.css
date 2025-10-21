@@ -1,0 +1,78 @@
+/* NEU: Wir definieren eine globale CSS-Variable für die Hintergrundfarbe */
+:root {
+  --nav-bg-rgb: 61, 44, 63; /* Standardwert: Winterfarbe (als R,G,B) */
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #3d2c3f;
+  font-family: "Gloria Hallelujah", cursive;
+  color: #f0e8f2;
+  transition: background-color 1s ease;
+}
+
+canvas {
+  position: fixed; top: 0; left: 0; outline: none; z-index: -1;
+}
+
+/* --- Burger Menü --- */
+.burger-menu {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 30px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 20;
+}
+.burger-menu span {
+  display: block; width: 100%; height: 2px; background-color: #f0e8f2; margin-bottom: 6px; transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-active .burger-menu span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-active .burger-menu span:nth-child(2) { opacity: 0; }
+.nav-active .burger-menu span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* --- Navigation --- */
+.poem-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 15;
+  
+  /* HIER WIRD DIE VARIABLE VERWENDET */
+  background: rgba(var(--nav-bg-rgb), 0.8);
+  
+  backdrop-filter: blur(10px);
+  transform: translateY(-100%);
+  transition: transform 0.5s ease, background-color 1s ease; /* Füge background-color zur Transition hinzu */
+}
+.nav-active .poem-nav {
+  transform: translateY(0);
+}
+.poem-nav button {
+  font-family: inherit; font-size: 1.2rem; background: transparent; border: none; padding: 0; color: #c9b8cd; cursor: pointer; transition: color 0.3s ease;
+}
+.poem-nav button:hover {
+  color: #fff;
+}
+.poem-nav button.active {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Der Rest deines CSS bleibt unverändert */
+.content-area { position: absolute; left: 0; top: 0; width: 50%; height: 100vh; display: grid; place-items: center; z-index: 5; }
+.scene { position: absolute; width: 80%; opacity: 1; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateX(0); }
+.scene.hidden { opacity: 0; pointer-events: none; transform: translateX(-30px); }
+.poem-box { padding: 2rem; background: rgba(25, 15, 30, 0.2); backdrop-filter: blur(5px); border-radius: 15px; text-align: left; }
+.poem-box h2 { margin-top: 0; padding-bottom: 1rem; }
+.final-title { width: 100%; text-align: center; }
+.final-title h1 { font-size: 4rem; color: #fff; }
